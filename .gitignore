@@ -131,3 +131,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ignore recordings dataset
+/recordings
+/dataset 

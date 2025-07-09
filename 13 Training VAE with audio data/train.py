@@ -6,10 +6,10 @@ from autoencoder import VAE
 
 
 LEARNING_RATE = 0.0005
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 EPOCHS = 150
 
-SPECTROGRAMS_PATH = "/home/valerio/datasets/fsdd/spectrograms/"
+SPECTROGRAMS_PATH = "dataset/spectrograms"
 
 
 def load_fsdd(spectrograms_path):

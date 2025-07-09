@@ -14,8 +14,7 @@ class SoundGenerator:
         self._min_max_normaliser = MinMaxNormaliser(0, 1)
 
     def generate(self, spectrograms, min_max_values):
-        generated_spectrograms, latent_representations = \
-            self.vae.reconstruct(spectrograms)
+        generated_spectrograms, latent_representations = self.vae.reconstruct(spectrograms)
         signals = self.convert_spectrograms_to_audio(generated_spectrograms, min_max_values)
         return signals, latent_representations
 

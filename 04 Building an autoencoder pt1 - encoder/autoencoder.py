@@ -1,6 +1,5 @@
 from tensorflow.keras import Model
-from tensorflow.keras.layers import Input, Conv2D, ReLU, BatchNormalization, \
-    Flatten, Dense
+from tensorflow.keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense
 from tensorflow.keras import backend as K
 
 

@@ -13,6 +13,21 @@ import tensorflow as tf
 
 tf.compat.v1.disable_eager_execution()
 
+def _calculate_reconstruction_loss(y_target, y_predicted):
+        error = y_target - y_predicted
+        reconstruction_loss = K.mean(K.square(error), axis=[1, 2, 3])
+        return reconstruction_loss
+
+def calculate_kl_loss(model):
+    # wrap `_calculate_kl_loss` such that it takes the model as an argument,
+    # returns a function which can take arbitrary number of arguments
+    # (for compatibility with `metrics` and utility in the loss function)
+    # and returns the kl loss
+    def _calculate_kl_loss(*args):
+        kl_loss = -0.5 * K.sum(1 + model.log_variance - K.square(model.mu) -
+                               K.exp(model.log_variance), axis=1)
+        return kl_loss
+    return _calculate_kl_loss
 
 class VAE:
     """
@@ -52,8 +67,8 @@ class VAE:
         optimizer = Adam(learning_rate=learning_rate)
         self.model.compile(optimizer=optimizer,
                            loss=self._calculate_combined_loss,
-                           metrics=[self._calculate_reconstruction_loss,
-                                    self._calculate_kl_loss])
+                           metrics=[_calculate_reconstruction_loss]) #,
+                                    # self._calculate_kl_loss])
 
     def train(self, x_train, batch_size, num_epochs):
         self.model.fit(x_train,
@@ -86,16 +101,13 @@ class VAE:
         return autoencoder
 
     def _calculate_combined_loss(self, y_target, y_predicted):
-        reconstruction_loss = self._calculate_reconstruction_loss(y_target, y_predicted)
+        reconstruction_loss = _calculate_reconstruction_loss(y_target, y_predicted)
         kl_loss = self._calculate_kl_loss(y_target, y_predicted)
         combined_loss = self.reconstruction_loss_weight * reconstruction_loss\
                                                          + kl_loss
         return combined_loss
 
-    def _calculate_reconstruction_loss(self, y_target, y_predicted):
-        error = y_target - y_predicted
-        reconstruction_loss = K.mean(K.square(error), axis=[1, 2, 3])
-        return reconstruction_loss
+    
 
     def _calculate_kl_loss(self, y_target, y_predicted):
         kl_loss = -0.5 * K.sum(1 + self.log_variance - K.square(self.mu) -

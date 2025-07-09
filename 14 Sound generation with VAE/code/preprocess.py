@@ -107,8 +107,9 @@ class Saver:
         with open(save_path, "wb") as f:
             pickle.dump(data, f)
 
+    
     def _generate_save_path(self, file_path):
-        file_name = os.path.split(file_path)[1]
+        file_name = os.path.splitext(os.path.basename(file_path))[0]
         save_path = os.path.join(self.feature_save_dir, file_name + ".npy")
         return save_path
 
@@ -183,9 +184,9 @@ if __name__ == "__main__":
     SAMPLE_RATE = 22050
     MONO = True
 
-    SPECTROGRAMS_SAVE_DIR = "/home/valerio/datasets/fsdd/spectrograms/"
-    MIN_MAX_VALUES_SAVE_DIR = "/home/valerio/datasets/fsdd/"
-    FILES_DIR = "/home/valerio/datasets/fsdd/audio/"
+    SPECTROGRAMS_SAVE_DIR = "dataset/spectrograms/"
+    MIN_MAX_VALUES_SAVE_DIR = "dataset/"
+    FILES_DIR = "recordings/"
 
     # instantiate all objects
     loader = Loader(SAMPLE_RATE, DURATION, MONO)
